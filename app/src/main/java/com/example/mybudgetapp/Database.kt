@@ -1,14 +1,15 @@
 package com.example.mybudgetapp
 
-import android.content.ContentValues.TAG
-import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.TextView
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 
 
-open class AppDatabase {
+open class AppDatabase(private val budgetActivity: BudgetActivity) {
     // Push an income to the database
     fun addIncomeDb(db: FirebaseFirestore, income: Income, data: AppData) {
         val incomeDb = HashMap<String, Any>()
@@ -173,7 +174,15 @@ open class AppDatabase {
 
     // Loop through the income and expense collections in the database, and store the data in local variables.
     // The 'onEvent' function will listen to any changes on the database, and automatically retrieve the changed data.
-    fun retrieveAllDocuments(db: FirebaseFirestore?, data: AppData) {
+    fun retrieveAllDocuments(
+        db: FirebaseFirestore?,
+        data: AppData,
+        lvIncome: ListView,
+        lvExpense: ListView,
+        textViewResult: TextView,
+        adapterIncome: ArrayAdapter<Any>,
+        adapterExpense: ArrayAdapter<Any>
+    ) {
 
 //        val docRef = db?.collection("${data.year}")?.document("${data.month}")?.collection("income")
 //        docRef?.get()
@@ -222,13 +231,16 @@ open class AppDatabase {
                         if (snapshots != null) {
                             for (doc in snapshots) {
                                 doc.getString("source")?.let {
-                                    doc.getDouble("value")
-                                        ?.let { it1 -> Income(it, it1) }
+                                    doc.getDouble("value")?.let {
+                                            it1 -> Income(it, it1) }
                                 }?.let { data.incomesDb.add(it) }
                                 data.incomesDbKeys.add(doc.id)
-                                println("added dataaaaaa retrieve")
                             }
-
+                            budgetActivity.setUpDataIncome(
+                                data.incomesDb,
+                                lvIncome,
+                                textViewResult,
+                                adapterIncome)
                         }
                     }
                 })
@@ -257,34 +269,40 @@ open class AppDatabase {
                                 }?.let { data.expensesDb.add(it) }
                                 data.expensesDbKeys.add(doc.id)
                             }
+                            budgetActivity.setUpDataExpense(
+                                data.expensesDb,
+                                lvExpense,
+                                textViewResult,
+                                adapterExpense)
                         }
                     }
                 })
 
-        db?.collection("${data.year}")?.document("${data.month}")?.collection("categories")
-            ?.addSnapshotListener(
-                object : EventListener<QuerySnapshot?> {
-                    override fun onEvent(
-                        snapshots: QuerySnapshot?,
-                        e: FirebaseFirestoreException?
-                    ) {
-                        data.categories.clear()
-                        data.categoriesId.clear()
-                        if (e != null) {
-                            println("Listen failed:$e")
-                            return
-                        }
-                        if (snapshots != null) {
-                            for (doc in snapshots) {
-                                doc.getString("name")?.let { name ->
-                                    doc.getDouble("budget")?.let { budget ->
-                                        Category(name, budget)
-                                    }
-                                }?.let { data.categories.add(it) }
-                                data.categoriesId.add(doc.id)
-                            }
-                        }
-                    }
-                })
+//        db?.collection("${data.year}")?.document("${data.month}")?.collection("categories")
+//            ?.addSnapshotListener(
+//                object : EventListener<QuerySnapshot?> {
+//                    override fun onEvent(
+//                        snapshots: QuerySnapshot?,
+//                        e: FirebaseFirestoreException?
+//                    ) {
+//                        data.categories.clear()
+//                        data.categoriesId.clear()
+//                        if (e != null) {
+//                            println("Listen failed:$e")
+//                            return
+//                        }
+//                        if (snapshots != null) {
+//                            for (doc in snapshots) {
+//                                doc.getString("name")?.let { name ->
+//                                    doc.getDouble("budget")?.let { budget ->
+//                                        Category(name, budget)
+//                                    }
+//                                }?.let { data.categories.add(it) }
+//                                data.categoriesId.add(doc.id)
+//                                budgetActivity.setUpData(data)
+//                            }
+//                        }
+//                    }
+//                })
     }
 }
