@@ -6,7 +6,7 @@ This app is intended to be used by me to control my personal finances. The app i
 
 The YouTube video below explains the basic functionalities of the app. 
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](https://youtu.be/LzN1up-4LmE)
 
 # Development Environment
 
