@@ -16,7 +16,7 @@ The programming language used was Kotlin.
 
 # Useful Websites
 
-This is a list of websites that were used by me as a reference:
+This is a list of websites that were used by me as reference:
 * [Create and display a dialog](https://stackoverflow.com/questions/38363721/display-popupwindow-upon-clicking-a-button)
 * [Troubleshoot adapter exceptions](https://www.semicolonworld.com/question/45341/android-listview-illegalstateexception-ldquo-the-content-of-the-adapter-has-changed-but-listview-did-not-receive-a-notification-rdquo)
 * [Using array adapter with listView](https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
